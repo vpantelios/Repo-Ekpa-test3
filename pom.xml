@@ -7,7 +7,7 @@
   <version>1.0.0</version>
   <packaging>pom</packaging>
 
-  <name>Citizen Registry - Multi Module</name>
+  <name>Citizen Registry</name>
   <description>RESTful υπηρεσία μητρώου πολιτών με tests και Spring Boot client</description>
 
   <properties>
