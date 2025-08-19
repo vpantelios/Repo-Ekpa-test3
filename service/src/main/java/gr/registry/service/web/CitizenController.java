@@ -38,21 +38,34 @@ public class CitizenController {
     /** Διαγραφή εγγραφής με βάση ΑΤ. */
     @DeleteMapping("/{at}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable @Pattern(regexp = "^[A-Za-z0-9]{8}$") String at) {
-        service.deleteByAt(at);
+    public void delete(
+        @PathVariable("at")
+        @Pattern(regexp = "^[A-Z]{2}\\d{6}$",
+                 message = "Μη έγκυρο AT (2 κεφαλαία γράμματα + 6 ψηφία, π.χ. AT123456)")
+        String at) {
+      service.deleteByAt(at);
     }
-
-    /** Ενημέρωση μόνο ΑΦΜ & Διεύθυνσης με βάση ΑΤ. */
+    /**
+    Ενημέρωση με βάση ΑΤ. */
     @PatchMapping("/{at}")
-    public Citizen update(@PathVariable @Pattern(regexp = "^[A-Za-z0-9]{8}$") String at,
-                          @RequestBody @Valid CitizenUpdateRequest req) {
-        return service.updateFields(at, req.getAfm(), req.getAddress());
-    }
+    public Citizen update(
+        @PathVariable("at")
+        @jakarta.validation.constraints.Pattern(
+        		regexp = "^[A-Z]{2}\\d{6}$",
+                message = "Μη έγκυρο AT (2 κεφαλαία γράμματα + 6 ψηφία, π.χ. AT123456)")
+        String at,
+        @RequestBody @jakarta.validation.Valid CitizenUpdateRequest req) {
+      return service.updateFields(at, req.getAfm(), req.getAddress());
+    }  
 
     /** Εμφάνιση στοιχείων πολίτη με βάση ΑΤ. */
     @GetMapping("/{at}")
-    public Citizen get(@PathVariable @Pattern(regexp = "^[A-Za-z0-9]{8}$") String at) {
-        return service.getByAt(at);
+    public Citizen getByAt(
+        @PathVariable("at")
+        @Pattern(regexp = "^[A-Z]{2}\\d{6}$",
+                 message = "Μη έγκυρο AT (2 κεφαλαία γράμματα + 6 ψηφία, π.χ. AT123456)")
+        String at) {
+      return service.getByAt(at);
     }
 
     /** Αναζήτηση με οποιονδήποτε συνδυασμό πεδίων. */
@@ -69,4 +82,6 @@ public class CitizenController {
         LocalDate birth = (birthDate == null || birthDate.isBlank()) ? null : DateParser.parseDDMMYYYY(birthDate);
         return service.search(at, firstName, lastName, gender, birth, afm, address);
     }
+    
+    
 }
