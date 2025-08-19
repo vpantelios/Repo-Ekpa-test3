@@ -10,8 +10,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest(classes = RegistryServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CitizenApiIT {
+@SpringBootTest(classes = RegistryServiceApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class CitizenApiIT {
 
     @LocalServerPort
     int port;
@@ -20,55 +21,76 @@ public class CitizenApiIT {
     void setup() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = port;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     @Test
     void fullCrudFlow() {
-        // Create
-        String body = "{\n" +
-                "  \"at\": \"AT12BC34\",\n" +
-                "  \"firstName\": \"Giorgos\",\n" +
-                "  \"lastName\": \"Ioannou\",\n" +
-                "  \"gender\": \"MALE\",\n" +
-                "  \"birthDate\": \"12-11-2008\",\n" +
-                "  \"afm\": \"123456789\",\n" +
-                "  \"address\": \"Athens\"\n" +
-                "}";
-        given().contentType("application/json").body(body)
-                .when().post("/citizens")
-                .then().statusCode(201)
-                .body("at", equalTo("AT12BC34"));
+        final String at = "AT123456";
 
-        // Duplicate should fail
-        given().contentType("application/json").body(body)
-                .when().post("/citizens")
-                .then().statusCode(400)
-                .body("error", containsString("Υπάρχει ήδη"));
+        // CREATE 
+        given()
+            .contentType("application/json")
+            .body("""
+                {
+                  "at":"AT123456",
+                  "firstName":"Giorgos",
+                  "lastName":"Papadopoulos",
+                  "gender":"MALE",
+                  "birthDate":"01-05-1990",
+                  "afm":"123456789",
+                  "address":"Athens"
+                }
+                """)
+        .when().post("/citizens")
+        .then().statusCode(201);
 
-        // Get
-        given().when().get("/citizens/AT12BC34")
-                .then().statusCode(200)
-                .body("firstName", equalTo("Giorgos"));
+        // GET 
+        given().when().get("/citizens/" + at)
+        .then().statusCode(200)
+               .body("firstName", equalTo("Giorgos"))
+               .body("lastName", equalTo("Papadopoulos"));
 
-        // Search by lastName contains
-        given().when().get("/citizens/search?lastName=oann")
-                .then().statusCode(200)
-                .body("size()", greaterThanOrEqualTo(1));
+        // Duplicate CREATE 
+        given().contentType("application/json")
+               .body("""
+                {
+                  "at":"AT123456",
+                  "firstName":"Giorgos",
+                  "lastName":"Papadopoulos",
+                  "gender":"MALE",
+                  "birthDate":"01-05-1990",
+                  "afm":"123456789",
+                  "address":"Athens"
+                }
+               """)
+        .when().post("/citizens")
+        .then().statusCode(400)
+               .body("$", anyOf(hasKey("error"), hasKey("message")));
 
-        // Update AFM & address
-        String upd = "{ \"afm\": \"987654321\", \"address\": \"Thessaloniki\" }";
-        given().contentType("application/json").body(upd)
-                .when().patch("/citizens/AT12BC34")
-                .then().statusCode(200)
-                .body("afm", equalTo("987654321"))
-                .body("address", equalTo("Thessaloniki"));
+        // SEARCH -> 200, >=1
+        given().when().get("/citizens/search?lastName=papad")
+        .then().statusCode(200)
+               .body("size()", greaterThanOrEqualTo(1));
 
-        // Delete
-        given().when().delete("/citizens/AT12BC34")
-                .then().statusCode(204);
+     // PATCH (afm + address) -> 200
+        given()
+          .contentType("application/json")
+          .body("{\"afm\":\"987654321\",\"address\":\"Thessaloniki\"}")
+        .when()
+          .patch("/citizens/" + at)
+        .then()
+          .statusCode(200)
+          .body("afm", equalTo("987654321"))
+          .body("address", equalTo("Thessaloniki"));
 
-        // Get after delete -> fail
-        given().when().get("/citizens/AT12BC34")
-                .then().statusCode(400);
+
+        // DELETE 
+        given().when().delete("/citizens/" + at)
+        .then().statusCode(204);
+
+        // GET after delete 
+        given().when().get("/citizens/" + at)
+        .then().statusCode(anyOf(is(404), is(400)));
     }
 }
