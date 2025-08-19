@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>gr.registry</groupId>
+    <artifactId>citizen-registry</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <artifactId>domain</artifactId>
+  <name>Citizen Registry - Domain</name>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <!-- JPA annotations for entity classes -->
+    <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+     
+      <scope>provided</scope>
+    </dependency>
+    <!-- Bean Validation annotations -->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      
+    </dependency>
+  </dependencies>
+</project>
