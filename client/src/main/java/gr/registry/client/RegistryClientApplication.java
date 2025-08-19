@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import java.util.Scanner;
 
 /**
- * Απλός CLI πελάτης με μενού. Τερματίζει σε μη έγκυρη επιλογή (σύμφωνα με την εκφώνηση).
+ * Απλός CLI πελάτης με μενού. Τερματίζει σε μη έγκυρη επιλογή.
  */
 @SpringBootApplication
 public class RegistryClientApplication implements CommandLineRunner {
