@@ -13,6 +13,10 @@ permissions:
 jobs:
   build-and-tests:
     runs-on: ubuntu-latest
+
+    defaults:
+     run:
+      working-directory: Repo-Ekpa-test3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,14 +28,13 @@ jobs:
           distribution: 'adopt'
 
       - name: Compile, Unit Test and Install
-        working-directory: ./citizen-registry
         run: mvn clean install -e -X
         
       - name: Build & test (unit + integration tests)
         run: mvn -B -ntp clean verify
         
       - name: Build with Maven
-        working-directory: ./citizen-registry
+        working-directory: Repo-Ekpa-test3
         run: mvn -B package --file pom.xml
 
       - name: Upload test reports
