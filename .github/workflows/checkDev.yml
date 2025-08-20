@@ -16,7 +16,7 @@ jobs:
 
     defaults:
      run:
-      working-directory: Repo-Ekpa-test3
+      working-directory: C:\Users\steve-mcqueen\Desktop\Repo-Ekpa-test3
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,7 +34,6 @@ jobs:
         run: mvn -B -ntp clean verify
         
       - name: Build with Maven
-        working-directory: Repo-Ekpa-test3
         run: mvn -B package --file pom.xml
 
       - name: Upload test reports
