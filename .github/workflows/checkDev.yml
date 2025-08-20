@@ -8,7 +8,7 @@ on:
       - develop
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-and-tests:
@@ -16,7 +16,8 @@ jobs:
 
     defaults:
      run:
-      working-directory: C:\Users\steve-mcqueen\Desktop\Repo-Ekpa-test3
+      working-directory: Repo-Ekpa-test3
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v4
