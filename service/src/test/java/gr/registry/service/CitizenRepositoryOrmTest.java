@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("test")
 class CitizenRepositoryOrmTest {
