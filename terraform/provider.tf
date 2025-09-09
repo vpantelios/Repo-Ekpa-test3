@@ -9,5 +9,5 @@ terraform {
 
 provider "aws" {
   region  = var.region
-  profile = "citizen"   # ή άστο έξω αν έχεις $env:AWS_PROFILE
+  profile = "citizen" # ή άστο έξω αν έχεις $env:AWS_PROFILE
 }
